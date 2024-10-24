@@ -37,7 +37,7 @@ export default async (req, res) => {
       }
     case 'DELETE':
       return partyController.delete(req, res);
-    case 'PUT':
+    case 'PATCH':
       return partyController.update(req, res);
     case 'OPTIONS': // Resposta para requisições preflight
       res.status(200).end();

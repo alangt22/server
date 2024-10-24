@@ -30,7 +30,7 @@ export default async (req, res) => {
       }
     case 'DELETE':
       return serviceController.delete(req, res);
-    case 'PUT':
+    case 'PATCH':
       return serviceController.update(req, res);
     default:
       res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT']);
