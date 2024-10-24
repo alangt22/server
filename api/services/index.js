@@ -1,9 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import cors from 'cors';
-import serviceController from '../../controllers/serviceController'; // ajuste o caminho
-import conn from '../../db/conn'; // ajuste o caminho conforme necessário
+import partyController from '../../controllers/partyController';
+import conn from '../../db/conn';
 
-const corsMiddleware = cors();
+const corsMiddleware = cors({
+  origin: 'http://localhost:5173', // Adicione esta linha
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+});
+
 const runMiddleware = (req, res, fn) =>
   new Promise((resolve, reject) => {
     fn(req, res, result => {
@@ -16,22 +20,21 @@ const runMiddleware = (req, res, fn) =>
 
 export default async (req, res) => {
   await conn();
-  
   await runMiddleware(req, res, corsMiddleware);
 
   switch (req.method) {
     case 'POST':
-      return serviceController.create(req, res);
+      return partyController.create(req, res);
     case 'GET':
       if (req.query.id) {
-        return serviceController.get(req, res);
+        return partyController.get(req, res);
       } else {
-        return serviceController.getAll(req, res);
+        return partyController.getAll(req, res);
       }
     case 'DELETE':
-      return serviceController.delete(req, res);
-    case 'PATCH':
-      return serviceController.update(req, res);
+      return partyController.delete(req, res);
+    case 'PUT':
+      return partyController.update(req, res);
     default:
       res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
