@@ -1,13 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import cors from 'cors';
-import partyController from '../../controllers/partyController';
-import conn from '../../db/conn';
+import serviceController from '../../controllers/serviceController'; // ajuste o caminho
+import conn from '../../db/conn'; // ajuste o caminho conforme necessário
 
-const corsMiddleware = cors({
-  origin: 'https://server-gules-one.vercel.app/api', // Adicione esta linha
-  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
-});
-
+const corsMiddleware = cors();
 const runMiddleware = (req, res, fn) =>
   new Promise((resolve, reject) => {
     fn(req, res, result => {
@@ -20,21 +16,22 @@ const runMiddleware = (req, res, fn) =>
 
 export default async (req, res) => {
   await conn();
+  
   await runMiddleware(req, res, corsMiddleware);
 
   switch (req.method) {
     case 'POST':
-      return partyController.create(req, res);
+      return serviceController.create(req, res);
     case 'GET':
       if (req.query.id) {
-        return partyController.get(req, res);
+        return serviceController.get(req, res);
       } else {
-        return partyController.getAll(req, res);
+        return serviceController.getAll(req, res);
       }
     case 'DELETE':
-      return partyController.delete(req, res);
-    case 'PATCH':
-      return partyController.update(req, res);
+      return serviceController.delete(req, res);
+    case 'PUT':
+      return serviceController.update(req, res);
     default:
       res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT']);
       res.status(405).end(`Method ${req.method} Not Allowed`);

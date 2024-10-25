@@ -1,18 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import cors from 'cors';
-import partyController from '../../controllers/partyController'; // ajuste o caminho conforme necessário
-import conn from '../../db/conn'; // ajuste o caminho conforme necessário
+import partyController from '../../controllers/partyController';
+import conn from '../../db/conn';
 
-// Habilitar CORS
 const corsMiddleware = cors({
-  origin: '*', // Permite todas as origens (ajuste conforme necessário)
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Métodos permitidos
-  allowedHeaders: ['Content-Type'], // Cabeçalhos permitidos
+  origin: 'http://localhost:5173', // Adicione esta linha
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
 
 const runMiddleware = (req, res, fn) =>
   new Promise((resolve, reject) => {
-    fn(req, res, (result) => {
+    fn(req, res, result => {
       if (result instanceof Error) {
         return reject(result);
       }
@@ -21,9 +19,7 @@ const runMiddleware = (req, res, fn) =>
   });
 
 export default async (req, res) => {
-  // Conectar ao banco de dados
   await conn();
-
   await runMiddleware(req, res, corsMiddleware);
 
   switch (req.method) {
@@ -37,11 +33,8 @@ export default async (req, res) => {
       }
     case 'DELETE':
       return partyController.delete(req, res);
-    case 'PATCH':
+    case 'PUT':
       return partyController.update(req, res);
-    case 'OPTIONS': // Resposta para requisições preflight
-      res.status(200).end();
-      break;
     default:
       res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
