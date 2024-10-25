@@ -1,4 +1,4 @@
-const {Service: ServiceModel} = require("../../models/Service");
+const {Service: ServiceModel} = require("../models/Service");
 
 const ServiceController = {
     create: async(req, res) => {
