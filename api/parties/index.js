@@ -4,7 +4,7 @@ import partyController from '../../controllers/partyController';
 import conn from '../../db/conn';
 
 const corsMiddleware = cors({
-  origin: 'http://localhost:5173', // Adicione esta linha
+  origin: '*', // Adicione esta linha
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
 });
 
@@ -33,7 +33,7 @@ export default async (req, res) => {
       }
     case 'DELETE':
       return partyController.delete(req, res);
-    case 'PUT':
+    case 'PATCH':
       return partyController.update(req, res);
     default:
       res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT']);
