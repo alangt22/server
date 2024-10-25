@@ -1,14 +1,10 @@
+import partyController from '../../../controllers/partyController';
+import conn from '../../../db/conn';
 import cors from 'cors';
-import partyController from '../../controllers/partyController'; // ajuste o caminho
-import conn from '../../db/conn'; // ajuste o caminho conforme necessário
 
-// Habilitar CORS
-const corsMiddleware = cors({
-  origin: 'http://localhost:5173', // Permitir apenas seu frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-});
+const corsMiddleware = cors();
 
-const runMiddleware = (req, res, fn) =>
+const runMiddleware = (req, res, fn) => 
   new Promise((resolve, reject) => {
     fn(req, res, result => {
       if (result instanceof Error) {
@@ -19,25 +15,24 @@ const runMiddleware = (req, res, fn) =>
   });
 
 export default async (req, res) => {
+  // Conectar ao banco de dados
   await conn();
-  
+
+  // Habilitar CORS
   await runMiddleware(req, res, corsMiddleware);
 
+  // Roteamento baseado no método da requisição
   switch (req.method) {
+    case 'GET':
+      return partyController.get(req, res);
     case 'POST':
       return partyController.create(req, res);
-    case 'GET':
-      if (req.query.id) {
-        return partyController.get(req, res);
-      } else {
-        return partyController.getAll(req, res);
-      }
     case 'DELETE':
       return partyController.delete(req, res);
     case 'PUT':
       return partyController.update(req, res);
     default:
-      res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT']);
+      res.setHeader('Allow', ['GET', 'POST', 'DELETE', 'PUT']);
       res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 };
