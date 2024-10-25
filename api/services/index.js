@@ -1,9 +1,12 @@
-
 import cors from 'cors';
 import serviceController from '../../controllers/serviceController'; // ajuste o caminho
 import conn from '../../db/conn'; // ajuste o caminho conforme necessário
 
-const corsMiddleware = cors();
+const corsMiddleware = cors({
+  origin: 'http://localhost:5173', // Permitir apenas seu frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+});
+
 const runMiddleware = (req, res, fn) =>
   new Promise((resolve, reject) => {
     fn(req, res, result => {

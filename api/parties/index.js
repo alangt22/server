@@ -3,7 +3,11 @@ import partyController from '../../controllers/partyController'; // ajuste o cam
 import conn from '../../db/conn'; // ajuste o caminho conforme necessário
 
 // Habilitar CORS
-const corsMiddleware = cors();
+const corsMiddleware = cors({
+  origin: 'http://localhost:5173', // Permitir apenas seu frontend
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+});
+
 const runMiddleware = (req, res, fn) =>
   new Promise((resolve, reject) => {
     fn(req, res, result => {
@@ -15,9 +19,8 @@ const runMiddleware = (req, res, fn) =>
   });
 
 export default async (req, res) => {
-  // Conectar ao banco de dados
   await conn();
-
+  
   await runMiddleware(req, res, corsMiddleware);
 
   switch (req.method) {
