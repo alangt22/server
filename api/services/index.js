@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+
 import cors from 'cors';
 import serviceController from '../../controllers/serviceController'; // ajuste o caminho
 import conn from '../../db/conn'; // ajuste o caminho conforme necessário
@@ -30,7 +30,7 @@ export default async (req, res) => {
       }
     case 'DELETE':
       return serviceController.delete(req, res);
-    case 'PATCH':
+    case 'PUT':
       return serviceController.update(req, res);
     default:
       res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT']);
