@@ -1,5 +1,5 @@
 import cors from 'cors';
-import serviceController from '../../controllers/serviceController'; // ajuste o caminho
+import serviceController from '../../controllers/partyController'; // ajuste o caminho
 import conn from '../../db/conn'; // ajuste o caminho conforme necessário
 
 const corsMiddleware = cors({
